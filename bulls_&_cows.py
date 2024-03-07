@@ -110,6 +110,7 @@ while game_continue:
         # verification that the number is 4 digits and it is a number
         try:
             guess_number = int(guess_number)
+
             if 1023 <= guess_number <= 9876:
                 # update values
                 attempts += 1
@@ -150,8 +151,7 @@ while game_continue:
             print(f"The number must be entered.")
 else:
     # end of game, overall stats
-    if not game_continue:
-        if game_win > 0:
-            statistics()
-        else:
-            print(f"Currently, there are no victories to view statistics.")
+    if game_win > 0:
+        statistics()
+    else:
+        print(f"Currently, there are no victories to view statistics.")
