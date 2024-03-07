@@ -25,7 +25,7 @@ def bulls_cows(number_1: int, number_2: int) -> tuple:
     and the number of digits that are contained in the secret number but are
     not in the correct positions (cows).
 
-    Example:wh
+    Example:
     >>> bulls_cows(1234, 4271)
     (1, 2)
 
