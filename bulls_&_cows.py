@@ -111,7 +111,7 @@ while game_continue:
         # verification that the number is 4 digits and it is a number
         try:
             guess_number = int(guess_number)
-            if 1000 <= guess_number <= 9876:
+            if 1023 <= guess_number <= 9876:
                 # update values
                 attempts += 1
                 bulls, cows = functions.bulls_cows(guess_number, generated_number)
