@@ -34,7 +34,7 @@ def secret_number() -> int:
     return unique_number
 
 
-def has_unique_digit(number: str) -> bool:
+def has_unique_digit(number: int) -> bool:
     """
     Check if guessed number has unique digits.
 
