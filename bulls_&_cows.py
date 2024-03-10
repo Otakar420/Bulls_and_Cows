@@ -98,10 +98,6 @@ while game_continue:
             print(f"Your number must not begin with zero.")
             continue
 
-        if not has_unique_digit(guess_number):
-            print(f"Your number must have each digit unique.")
-            continue
-
         if guess_number.lower() == "q":
             game_continue = False
             print(f"{separator_3}\n{texts.quit_msg}\n{separator_3}")
@@ -140,6 +136,9 @@ while game_continue:
 
                 # reset values to another attempt
                 bulls, cows = [0, 0]
+
+            elif not has_unique_digit(guess_number):
+                print(f"Your number must have each digit unique.")
 
             elif len(str(guess_number)) < 4:
                 print(f"Your number is less than 4 digit.")
