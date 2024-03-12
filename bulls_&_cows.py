@@ -106,8 +106,12 @@ while game_continue:
         # verification that the number is 4 digits and it is a number
         try:
             guess_number = int(guess_number)
+            if not has_unique_digit(guess_number):
+                print(f"Your number must have each digit unique.")
+                continue
 
             if 1023 <= guess_number <= 9876:
+
                 # update values
                 attempts += 1
                 bulls, cows = functions.bulls_cows(guess_number, generated_number)
@@ -136,9 +140,6 @@ while game_continue:
 
                 # reset values to another attempt
                 bulls, cows = [0, 0]
-
-            elif not has_unique_digit(guess_number):
-                print(f"Your number must have each digit unique.")
 
             elif len(str(guess_number)) < 4:
                 print(f"Your number is less than 4 digit.")
