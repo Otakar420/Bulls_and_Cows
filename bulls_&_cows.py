@@ -88,7 +88,7 @@ game_continue = True
 while game_continue:
     # randomly generated 4-digit number
     generated_number = secret_number()
-    print(generated_number)
+
     # setup values
     attempts, bulls, cows = [0, 0, 0]
     start_time, end_time = [None, None]
@@ -113,7 +113,6 @@ while game_continue:
                 continue
 
             if 1023 <= guess_number <= 9876:
-
                 # update values
                 attempts += 1
                 bulls, cows = functions.bulls_cows(guess_number, generated_number)
@@ -158,5 +157,6 @@ else:
         txt_output = open("stats.txt", mode="a")
         txt_output.write(statistics())
         txt_output.close()
+
     else:
         print(f"Currently, there are no victories to view statistics.")
