@@ -71,10 +71,10 @@ def statistics() -> str:
     terminal_output = (
         f"{separator_3}\n"
         f"Statistics:\n"
-        f"Average guess to reveal the number: {total_attempts / game_win:.2f}\n"
-        f"Average time to reveal the number: {total_time / game_win:.2f} sec\n"
-        f"Total games wins: {game_win}\n"
-        f"Total gaming time: {total_time:.2f} sec\n"
+        f"\tAverage guess to reveal the number: {total_attempts / game_win:.2f}\n"
+        f"\tAverage time to reveal the number: {total_time / game_win:.2f} sec\n"
+        f"\tTotal games wins: {game_win}\n"
+        f"\tTotal gaming time: {total_time:.2f} sec\n"
     )
     return terminal_output
 
@@ -88,6 +88,7 @@ game_continue = True
 while game_continue:
     # randomly generated 4-digit number
     generated_number = secret_number()
+    print(generated_number)
 
     # setup values
     attempts, bulls, cows = [0, 0, 0]
@@ -154,9 +155,8 @@ else:
     # end of game, overall stats
     if game_win > 0:
         print(statistics())
-        txt_output = open("stats.txt", mode="a")
-        txt_output.write(statistics())
-        txt_output.close()
+        with open("stats.txt", mode="w") as txt_output:
+            txt_output.write(statistics())
 
     else:
         print(f"Currently, there are no victories to view statistics.")
