@@ -1,6 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 
+stats.txt
+
 # Distribution / packaging
 .Python
 env/
