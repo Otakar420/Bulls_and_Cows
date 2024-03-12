@@ -77,13 +77,6 @@ def statistics() -> str:
         f"Total gaming time: {total_time:.2f} sec\n"
     )
     return terminal_output
-#     print(separator_3)
-#     print(f"""Statistics:
-#     Average guess to reveal the number: {total_attempts / game_win:.2f}
-#     Average time to reveal the number: {total_time / game_win:.2f} sec
-#     Total games wins: {game_win}
-#     Total gaming time: {total_time:.2f} sec
-# """)
 
 
 # welcome
