@@ -1,7 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 
-stats.txt
+
+/Stats_overall/
 
 # Distribution / packaging
 .Python

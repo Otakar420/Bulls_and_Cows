@@ -5,6 +5,7 @@
 
 import random
 import time
+from datetime import datetime
 import os
 
 import functions
@@ -68,15 +69,37 @@ def evaluation() -> None:
 
 
 def statistics() -> str:
+    current_time = (datetime.now()).strftime("%H:%M:%S")
+
     terminal_output = (
         f"{separator_3}\n"
-        f"Statistics:\n"
+        # f"{current_time:>55}\n"
+        f"{"Statistics:":<{55//2}}{current_time:>{55//2}}\n"
         f"\tAverage guess to reveal the number: {total_attempts / game_win:.2f}\n"
         f"\tAverage time to reveal the number: {total_time / game_win:.2f} sec\n"
         f"\tTotal games wins: {game_win}\n"
         f"\tTotal gaming time: {total_time:.2f} sec\n"
     )
     return terminal_output
+
+
+def stats_to_file() -> None:
+    """
+    This function creates a 'Stats_overall' folder and file 'stats_{Date}.txt' in the working directory
+
+    :return:
+    """
+    try:
+        os.mkdir("Stats_overall")
+    except FileExistsError:
+        pass
+
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    name_file = f"{current_date}_stats.txt"
+    path_to_file = os.path.join("Stats_overall", name_file)
+
+    with open(path_to_file, mode="a") as txt_output:
+        txt_output.write(statistics())
 
 
 # welcome
@@ -88,6 +111,7 @@ game_continue = True
 while game_continue:
     # randomly generated 4-digit number
     generated_number = secret_number()
+    print(generated_number)
 
     # setup values
     attempts, bulls, cows = [0, 0, 0]
@@ -154,8 +178,6 @@ else:
     # end of game, overall stats
     if game_win > 0:
         print(statistics())
-        with open("stats.txt", mode="w") as txt_output:
-            txt_output.write(statistics())
-
+        stats_to_file()
     else:
         print(f"Currently, there are no victories to view statistics.")
