@@ -109,7 +109,7 @@ game_continue = True
 while game_continue:
     # randomly generated 4-digit number
     generated_number = secret_number()
-    print(generated_number)
+    
     # setup values
     attempts, bulls, cows = [0, 0, 0]
     start_time, end_time = [None, None]
