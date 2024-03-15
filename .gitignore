@@ -1,9 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 
-
-/Stats_overall/
-
 # Distribution / packaging
 .Python
 env/
@@ -119,3 +116,7 @@ fabric.properties
 
 # idea folder, uncomment if you don't need it
 .idea
+
+## other
+/bulls_&_cows.exe
+/Stats_overall/

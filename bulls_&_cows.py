@@ -85,9 +85,7 @@ def statistics() -> str:
 
 def stats_to_file() -> None:
     """
-    This function creates a 'Stats_overall' folder and file 'stats_{Date}.txt' in the working directory
-
-    :return:
+    This function creates a 'Stats_overall' folder and file 'stats_{Date}.txt' in the working directory.
     """
     try:
         os.mkdir("Stats_overall")
@@ -98,7 +96,7 @@ def stats_to_file() -> None:
     name_file = f"{current_date}_stats.txt"
     path_to_file = os.path.join("Stats_overall", name_file)
 
-    with open(path_to_file, mode="a") as txt_output:
+    with open(path_to_file, mode="a", encoding="utf-8") as txt_output:
         txt_output.write(statistics())
 
 
@@ -111,7 +109,7 @@ game_continue = True
 while game_continue:
     # randomly generated 4-digit number
     generated_number = secret_number()
-
+    print(generated_number)
     # setup values
     attempts, bulls, cows = [0, 0, 0]
     start_time, end_time = [None, None]
