@@ -43,6 +43,7 @@ def update_bull_cows_values() -> None:
     Update values for every try to guess a secret number.
     """
     bulls, cows = functions.bulls_cows(guess_number, generated_number)
+    game_values["attempts"] += 1
     game_values["bulls"] = bulls
     game_values["cows"] = cows
     print(f">>> {bulls} bull{"s" if bulls != 1 else ""}, "
@@ -57,16 +58,17 @@ def update_end_game_values() -> None:
     os.system("cls" if os.name == "nt" else "clear")
     end_game_values["game_win"] += 1
     end_game_values["total_time"] += duration
-    end_game_values["total_attempts"] += attempts
+    end_game_values["total_attempts"] += game_values["attempts"]
     evaluation_for_user()
 
 
 def evaluation_for_user() -> None:
     sep_1, sep_2 = ["-" * 55, "=" * 55]
+    rating = functions.rating(game_values["attempts"])
     print(f"{sep_2}")
     print(f">>> {generated_number} <<<".center(55))
     print((f"Correct, you've guessed the right number "
-           f"in {attempts} guess{"es" if attempts != 1 else ""}!"
+           f"in {game_values["attempts"]} guess{"es" if game_values["attempts"] != 1 else ""}!"
            ).center(55)
           )
     print(f"{sep_1}")
@@ -107,7 +109,7 @@ def stats_to_file() -> None:
         txt_output.write(statistics())
 
 
-# variables
+# new game values
 game_continue = True
 end_game_values = {
         "game_win": 0,
@@ -126,10 +128,10 @@ while game_continue:
     # uncomment to view the secret number
     # print(generated_number)
 
-    # setup values
+    # setup values for a next game
     start_time = None
-    attempts = 0
     game_values = {
+        "attempts": 0,
         "bulls": 0,
         "cows": 0
     }
@@ -158,14 +160,12 @@ while game_continue:
                 continue
 
             if len(str(guess_number)) == len(str(generated_number)):
-                attempts += 1
                 update_bull_cows_values()
 
                 # guess the correct number
                 if game_values["bulls"] == len(str(generated_number)):
                     end_time = time.time()
                     duration = end_time - start_time
-                    rating = functions.rating(attempts)
                     update_end_game_values()
 
                     # check if the user wants to continue
