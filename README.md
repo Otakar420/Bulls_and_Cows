@@ -1,5 +1,13 @@
 # Bulls and Cows
 
+## Running the Game
+- Open PowerShell in the game directory.
+- Make sure Python is installed — the game has been tested with Python version 3.12.1.
+- Then, execute the program using the following command:
+```
+python '.\bulls_&_cows.py'
+```
+
 ## Introduction
 
 - Bulls and cows, also known as cows and bulls or pigs and bulls, is a classic code-breaking game, often played with paper and pencil for two or more players.
