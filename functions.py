@@ -1,6 +1,3 @@
-from texts import worst, best
-
-
 def rating(tries: int) -> str:
     """
     This functions returns a judgment based on the attempt.
@@ -8,6 +5,15 @@ def rating(tries: int) -> str:
     :param tries: Total number of attempts to guess the number.
     :return: judgment
     """
+    best = (
+            "Fantastic!".center(55) + "\n" +
+            "You guessed it within the first three attempts!".center(55)
+    )
+    worst = (
+            "Keep trying!".center(55) + "\n" +
+            "The solution might be closer than expected.".center(55)
+    )
+
     if tries <= 3:
         judgment = best
     elif 4 <= tries <= 5:
@@ -35,7 +41,7 @@ def bulls_cows(number_1: int, number_2: int) -> tuple:
     """
     sum_bulls = 0
     sum_cows = 0
-    for i in range(4):
+    for i in range(len(str(number_2))):
         if str(number_1)[i] == str(number_2)[i]:
             sum_bulls += 1
         elif str(number_1)[i] in str(number_2) and str(number_1)[i] != str(number_2)[i]:
@@ -44,8 +50,8 @@ def bulls_cows(number_1: int, number_2: int) -> tuple:
 
 
 if __name__ == "__main__":
-    a = 6
-    bulls, cows = bulls_cows(4588, 4584)
+    a = 1
+    bulls, cows = bulls_cows(9588, 4584)
     print(rating(a))
     print("-" * 55)
     print(bulls, "bulls")

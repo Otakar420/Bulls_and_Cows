@@ -11,10 +11,6 @@ import os
 import functions
 import texts
 
-# separators, variables
-separator, separator_2, separator_3 = ["-" * 55, "*" * 55, "=" * 55]
-game_win, total_time, total_attempts = [0, 0, 0]
-
 
 # functions
 def secret_number() -> int:
@@ -23,14 +19,11 @@ def secret_number() -> int:
 
     :return: Secret number
     """
-    digits = list(range(10))
-    random.shuffle(digits)
-    digits = digits[:4]
-
-    while digits[0] == 0:
-        random.shuffle(digits)
-
-    unique_number = int("".join(str(digit) for digit in digits))
+    first_digit = [random.randint(1, 9)]
+    possible_digits = list(set(range(10)) - set(first_digit))
+    next_digits = random.sample(possible_digits, 3)
+    all_digits = first_digit + next_digits
+    unique_number = int("".join(map(str, all_digits)))
 
     return unique_number
 
@@ -45,40 +38,54 @@ def has_unique_digit(number: int) -> bool:
     return len(number_set) == len(str(number))
 
 
-def welcome_text() -> None:
-    print("_" * 55)
-    print(f"{"Welcome to": ^55}")
-    print(f"{">>> BULL & COWS! <<<": ^55}")
-    print(f"{separator}")
-    print(f"{texts.welcome}\n{separator}")
-    print(f"| quit = 'q' |")
-    print(separator_3)
+def update_bull_cows_values() -> None:
+    """
+    Update values for every try to guess a secret number.
+    """
+    bulls, cows = functions.bulls_cows(guess_number, generated_number)
+    game_values["bulls"] = bulls
+    game_values["cows"] = cows
+    print(f">>> {bulls} bull{"s" if bulls != 1 else ""}, "
+          f"{cows} cow{"s" if cows != 1 else ""}"
+          )
 
 
-def evaluation() -> None:
-    print(f"{separator_3}")
+def update_end_game_values() -> None:
+    """
+    Update statistics for the end game.
+    """
+    os.system("cls" if os.name == "nt" else "clear")
+    end_game_values["game_win"] += 1
+    end_game_values["total_time"] += duration
+    end_game_values["total_attempts"] += attempts
+    evaluation_for_user()
+
+
+def evaluation_for_user() -> None:
+    sep_1, sep_2 = ["-" * 55, "=" * 55]
+    print(f"{sep_2}")
     print(f">>> {generated_number} <<<".center(55))
     print((f"Correct, you've guessed the right number "
            f"in {attempts} guess{"es" if attempts != 1 else ""}!"
            ).center(55)
           )
-    print(f"{separator_2}")
-    print(f"{rating}\n{separator_2}")
+    print(f"{sep_1}")
+    print(f"{rating}\n{sep_1}")
     print(f"Elapsed time: {duration:.2f} sec".center(55))
-    print(f"{separator_3}")
+    print(f"{sep_2}")
 
 
 def statistics() -> str:
+    sep = "=" * 55
     current_time = (datetime.now()).strftime("%H:%M:%S")
-
     terminal_output = (
-        f"{separator_3}\n"
+        f"{sep}\n"
         # f"{current_time:>55}\n"
-        f"{"Statistics:":<{55//2}}{current_time:>{55//2}}\n"
-        f"\tAverage guess to reveal the number: {total_attempts / game_win:.2f}\n"
-        f"\tAverage time to reveal the number: {total_time / game_win:.2f} sec\n"
-        f"\tTotal games wins: {game_win}\n"
-        f"\tTotal gaming time: {total_time:.2f} sec\n"
+        f"{"Statistics:":<{55 // 2}}{current_time:>{55 // 2}}\n"
+        f"\tAverage guess to reveal the number: {end_game_values["total_attempts"] / end_game_values["game_win"]:.2f}\n"
+        f"\tAverage time to reveal the number: {end_game_values["total_time"] / end_game_values["game_win"]:.2f} sec\n"
+        f"\tTotal games wins: {end_game_values["game_win"]}\n"
+        f"\tTotal gaming time: {end_game_values["total_time"]:.2f} sec\n"
     )
     return terminal_output
 
@@ -100,19 +107,32 @@ def stats_to_file() -> None:
         txt_output.write(statistics())
 
 
-# welcome
-welcome_text()
-
+# variables
 game_continue = True
+end_game_values = {
+        "game_win": 0,
+        "total_time": 0,
+        "total_attempts": 0
+    }
+
+# welcome
+texts.welcome_text()
 
 # bulls & cows new game
 while game_continue:
     # randomly generated 4-digit number
     generated_number = secret_number()
-    print(generated_number)
+
+    # uncomment to view the secret number
+    # print(generated_number)
+
     # setup values
-    attempts, bulls, cows = [0, 0, 0]
-    start_time, end_time = [None, None]
+    start_time = None
+    attempts = 0
+    game_values = {
+        "bulls": 0,
+        "cows": 0
+    }
 
     while True:
         guess_number = input(f"Enter a number: ")
@@ -123,58 +143,45 @@ while game_continue:
 
         if guess_number.lower() == "q":
             game_continue = False
-            print(f"{separator_3}\n{texts.quit_msg}\n{separator_3}")
+            texts.quit_text()
             break
 
-        # verification that the number is 4 digits and it is a number
+        # verification that the guessed number is a number
         try:
             guess_number = int(guess_number)
+        except ValueError:
+            print(f"The number must be entered.")
+        else:
+            # verification that the guessed number consists of 4 unique digits
             if not has_unique_digit(guess_number):
                 print(f"Your number must have each digit unique.")
                 continue
 
-            if 1023 <= guess_number <= 9876:
-                # update values
+            if len(str(guess_number)) == len(str(generated_number)):
                 attempts += 1
-                bulls, cows = functions.bulls_cows(guess_number, generated_number)
-                print(f">>> {bulls} bull{"s" if bulls != 1 else ""},"
-                      f"{cows} cow{"s" if cows != 1 else ""}"
-                      )
+                update_bull_cows_values()
 
-                # correct number
-                if bulls == 4:
-                    os.system("cls" if os.name == "nt" else "clear")
+                # guess the correct number
+                if game_values["bulls"] == len(str(generated_number)):
                     end_time = time.time()
                     duration = end_time - start_time
                     rating = functions.rating(attempts)
-
-                    # update statistics
-                    game_win += 1
-                    total_time += duration
-                    total_attempts += attempts
-
-                    # evaluation for users
-                    evaluation()
+                    update_end_game_values()
 
                     # check if the user wants to continue
-                    game_continue = True if input("Do you want to continue? (y/n): ").lower() == "y" else False
+                    game_continue = True if input("Do you want to continue? (y/n): ").lower() == "y"\
+                        else False
                     break
 
-                # reset values to another attempt
-                bulls, cows = [0, 0]
+            else:
+                if len(str(guess_number)) < len(str(generated_number)):
+                    print("Your number is less than 4 digits.")
+                else:
+                    print("Your number is greater than 4 digits.")
 
-            elif len(str(guess_number)) < 4:
-                print(f"Your number is less than 4 digit.")
-
-            elif len(str(guess_number)) > 4:
-                print(f"Your number is greater than 4 digit.")
-
-        except ValueError:
-            print(f"The number must be entered.")
+# end of game, overall stats
+if end_game_values["game_win"] > 0:
+    print(statistics())
+    stats_to_file()
 else:
-    # end of game, overall stats
-    if game_win > 0:
-        print(statistics())
-        stats_to_file()
-    else:
-        print(f"Currently, there are no victories to view statistics.")
+    print(f"Currently, there are no victories to view statistics.")
